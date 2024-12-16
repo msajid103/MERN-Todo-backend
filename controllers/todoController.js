@@ -45,3 +45,23 @@ exports.deleteTodoById = async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 };
+exports.updateTodoById = async (req, res) => {
+    const { title, description } = req.body;
+
+    try {
+        // Find the TODO by ID and update
+        const updatedTodo = await Todo.findByIdAndUpdate(
+            req.params.id,
+            { title, description },
+            { new: true, runValidators: true } // Return the updated document and validate input
+        );
+
+        if (!updatedTodo) {
+            return res.status(404).json({ message: "Todo not found" });
+        }
+
+        res.json(updatedTodo);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
